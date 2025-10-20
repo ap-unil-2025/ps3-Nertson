@@ -14,11 +14,18 @@ def get_numbers_from_user():
     numbers = []
 
     while True:
-        # TODO: Get input from user
-        # TODO: Check if user typed 'done'
-        # TODO: Try to convert to float and add to list
-        # TODO: Handle invalid input gracefully
-        pass
+        user_input = input("Enter a number (or 'done' to finish): ").strip()
+        if user_input.lower() == 'done':
+            break
+        try:
+            # Accept integers or floats
+            if '.' in user_input:
+                num = float(user_input)
+            else:
+                num = int(user_input)
+            numbers.append(num)
+        except ValueError:
+            print("Invalid number, please try again.")
 
     return numbers
 
@@ -44,14 +51,33 @@ def analyze_numbers(numbers):
         return None
 
     analysis = {}
+    # Normalize numbers to floats for average/sum calculations
+    nums = [float(x) for x in numbers]
 
-    # TODO: Calculate count
-    # TODO: Calculate sum
-    # TODO: Calculate average
-    # TODO: Find minimum
-    # TODO: Find maximum
-    # TODO: Count even numbers (hint: use modulo operator)
-    # TODO: Count odd numbers
+    count = len(nums)
+    total = sum(nums)
+    average = total / count
+    minimum = min(nums)
+    maximum = max(nums)
+
+    # For even/odd counting, consider integers only; treat x as even if it's integer-valued
+    even_count = 0
+    odd_count = 0
+    for x in nums:
+        if float(x).is_integer():
+            if int(x) % 2 == 0:
+                even_count += 1
+            else:
+                odd_count += 1
+
+    analysis['count'] = count
+    analysis['sum'] = total if not total.is_integer() else int(total)
+    analysis['average'] = round(average, 2) if not average.is_integer() else float(int(average))
+    # Keep min/max as int when they are integer-valued
+    analysis['minimum'] = int(minimum) if float(minimum).is_integer() else minimum
+    analysis['maximum'] = int(maximum) if float(maximum).is_integer() else maximum
+    analysis['even_count'] = even_count
+    analysis['odd_count'] = odd_count
 
     return analysis
 
@@ -69,13 +95,17 @@ def display_analysis(analysis):
     print("\nAnalysis Results:")
     print("-" * 20)
 
-    # TODO: Display all analysis results in a nice format
-    # Example:
-    # Count: 5
-    # Sum: 25
-    # Average: 5.00
-    # etc.
-    pass
+    print(f"Count: {analysis.get('count')}")
+    print(f"Sum: {analysis.get('sum')}")
+    avg = analysis.get('average')
+    if isinstance(avg, float):
+        print(f"Average: {avg:.2f}")
+    else:
+        print(f"Average: {avg}")
+    print(f"Minimum: {analysis.get('minimum')}")
+    print(f"Maximum: {analysis.get('maximum')}")
+    print(f"Even numbers: {analysis.get('even_count')}")
+    print(f"Odd numbers: {analysis.get('odd_count')}")
 
 
 def main():
