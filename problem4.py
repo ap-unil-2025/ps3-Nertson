@@ -30,9 +30,11 @@ def count_words(filename):
     Returns:
         int: Total number of words
     """
-    # TODO: Open file and count words
-    # Hint: Use split() to separate words
-    pass
+    with open(filename, 'r', encoding='utf-8') as f:
+        text = f.read()
+    # Split on whitespace to get words
+    words = text.split()
+    return len(words)
 
 
 def count_lines(filename):
@@ -45,8 +47,9 @@ def count_lines(filename):
     Returns:
         int: Total number of lines
     """
-    # TODO: Open file and count lines
-    pass
+    with open(filename, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+    return len(lines)
 
 
 def count_characters(filename, include_spaces=True):
@@ -60,9 +63,12 @@ def count_characters(filename, include_spaces=True):
     Returns:
         int: Total number of characters
     """
-    # TODO: Open file and count characters
-    # If include_spaces is False, don't count spaces
-    pass
+    with open(filename, 'r', encoding='utf-8') as f:
+        text = f.read()
+    if include_spaces:
+        return len(text)
+    # exclude spaces
+    return len(text.replace(' ', '').replace('\n', ''))
 
 
 def find_longest_word(filename):
@@ -75,9 +81,19 @@ def find_longest_word(filename):
     Returns:
         str: The longest word found
     """
-    # TODO: Find the longest word
-    # Hint: You might need to remove punctuation
-    pass
+    import string
+
+    with open(filename, 'r', encoding='utf-8') as f:
+        text = f.read()
+
+    # Remove punctuation
+    translator = str.maketrans('', '', string.punctuation)
+    cleaned = text.translate(translator)
+    words = cleaned.split()
+    if not words:
+        return ''
+    longest = max(words, key=len)
+    return longest
 
 
 def word_frequency(filename):
@@ -95,11 +111,16 @@ def word_frequency(filename):
 
     frequency = {}
 
-    # TODO: Open file
-    # TODO: Read all words
-    # TODO: Convert to lowercase
-    # TODO: Remove punctuation (use string.punctuation)
-    # TODO: Count frequency of each word
+    with open(filename, 'r', encoding='utf-8') as f:
+        text = f.read()
+
+    # Remove punctuation and convert to lowercase
+    translator = str.maketrans('', '', string.punctuation)
+    cleaned = text.translate(translator).lower()
+    words = cleaned.split()
+
+    for w in words:
+        frequency[w] = frequency.get(w, 0) + 1
 
     return frequency
 
